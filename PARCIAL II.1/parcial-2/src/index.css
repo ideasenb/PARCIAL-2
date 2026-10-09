@@ -1,0 +1,592 @@
+/* ==========================================================================
+   INDIEPLAY - 80s ANALOG / RETRO ARCADE DESIGN SYSTEM
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Share+Tech+Mono&family=VT323&display=swap');
+
+:root {
+  /* Paleta Análoga Retro 80s */
+  --bg-dark: #12101c;
+  --bg-panel: #1b172a;
+  --bg-card: #231e34;
+  --bg-card-hover: #2b2540;
+  
+  --neon-cyan: #00f0ff;
+  --neon-magenta: #ff2a85;
+  --neon-amber: #ffb703;
+  --neon-green: #39ff14;
+  --arcade-orange: #ff6b35;
+
+  --text-primary: #fffdfa;
+  --text-muted: #9e95b3;
+  --text-dark: #0e0c15;
+
+  --border-muted: #383050;
+  --border-active: #ff2a85;
+
+  --shadow-hard: 4px 4px 0px #06050b;
+  --shadow-cyan: 4px 4px 0px #00f0ff;
+  --shadow-magenta: 4px 4px 0px #ff2a85;
+  --shadow-amber: 4px 4px 0px #ffb703;
+
+  --font-arcade: 'Press Start 2P', monospace;
+  --font-vhs: 'VT323', monospace;
+  --font-mono: 'Share Tech Mono', 'Courier New', monospace;
+}
+
+/* ==========================================================================
+   RESET Y TEXTURA CRT / SCANLINES
+   ========================================================================== */
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--bg-dark);
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+  min-height: 100vh;
+  /* Fondo estilo pantalla analógica CRT con sutiles líneas de escaneo */
+  background-image: 
+    radial-gradient(ellipse at 50% 0%, rgba(255, 42, 133, 0.12) 0%, transparent 65%),
+    repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.22) 0px, rgba(0, 0, 0, 0.22) 2px, transparent 2px, transparent 4px),
+    linear-gradient(rgba(18, 16, 28, 0.95), rgba(18, 16, 28, 0.95));
+  overflow-x: hidden;
+}
+
+/* ==========================================================================
+   LAYOUT PRINCIPAL (#root) - GRID DE PANTALLA COMPLETA
+   ========================================================================== */
+
+#root {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  grid-template-rows: auto 1fr;
+  grid-template-areas:
+    "header header"
+    "sidebar main";
+  min-height: 100vh;
+  width: 100%;
+}
+
+/* ==========================================================================
+   1. HEADER - ESTILO MARQUESINA ARCADE / VHS TAPE
+   ========================================================================== */
+
+.header {
+  grid-area: header;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background-color: var(--bg-panel);
+  border-bottom: 3px solid var(--neon-cyan);
+  padding: 14px 28px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5);
+  position: relative;
+}
+
+/* Franja multicolor retro tipo cinta Polaroid/VHS en la parte superior */
+.header::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #ff2a85 0%, #ff7b00 25%, #ffe600 50%, #00f0ff 75%, #a855f7 100%);
+}
+
+.header-brand {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.vhs-rec-indicator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-vhs);
+  font-size: 18px;
+  color: var(--neon-amber);
+  letter-spacing: 1px;
+}
+
+.rec-dot {
+  width: 10px;
+  height: 10px;
+  background-color: #ff0055;
+  border-radius: 50%;
+  box-shadow: 0 0 8px #ff0055;
+  animation: blink 1s infinite alternate;
+}
+
+.vhs-mode {
+  border: 1px solid var(--neon-cyan);
+  color: var(--neon-cyan);
+  font-size: 13px;
+  padding: 1px 6px;
+  border-radius: 2px;
+  background: rgba(0, 240, 255, 0.08);
+}
+
+.header-title {
+  font-family: var(--font-arcade);
+  font-size: 20px;
+  letter-spacing: 1px;
+  color: #ffffff;
+  /* Efecto anaglifo / aberración cromática 80s */
+  text-shadow: 2px 2px 0px var(--neon-magenta), -2px -1px 0px var(--neon-cyan);
+}
+
+.header-controls {
+  display: flex;
+  align-items: center;
+}
+
+/* Botón Iniciar Sesión estilo Arcade táctil */
+.login-btn {
+  font-family: var(--font-arcade);
+  font-size: 11px;
+  padding: 12px 20px;
+  background-color: var(--neon-magenta);
+  color: #ffffff;
+  border: 2px solid #ffffff;
+  cursor: pointer;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  box-shadow: var(--shadow-hard);
+  transition: all 0.15s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.login-btn:hover {
+  background-color: #ff4797;
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0px var(--neon-cyan);
+}
+
+.login-btn:active {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0px #000;
+}
+
+.btn-bracket {
+  color: #ffffff;
+  opacity: 0.8;
+}
+
+/* ==========================================================================
+   2. SIDEBAR - PANEL DE CONTROL CASSETTE DECK
+   ========================================================================== */
+
+.sidebar {
+  grid-area: sidebar;
+  background-color: var(--bg-panel);
+  border-right: 3px solid var(--border-muted);
+  padding: 24px 18px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 12px;
+  border-bottom: 2px dashed var(--border-muted);
+}
+
+.sidebar-tag {
+  font-family: var(--font-vhs);
+  font-size: 20px;
+  color: var(--neon-cyan);
+  letter-spacing: 2px;
+}
+
+.sidebar-status-led {
+  width: 9px;
+  height: 9px;
+  background-color: var(--neon-green);
+  border-radius: 50%;
+  box-shadow: 0 0 7px var(--neon-green);
+  animation: blink 2.5s infinite;
+}
+
+.sidebar-menu {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* Botones de navegación tipo botones mecánicos de pletina/cassette */
+.sidebar-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 13px 16px;
+  background-color: #241f38;
+  border: 2px solid var(--border-muted);
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+  font-size: 15px;
+  font-weight: bold;
+  letter-spacing: 1px;
+  cursor: pointer;
+  box-shadow: 3px 3px 0px var(--text-dark);
+  transition: all 0.15s ease;
+  text-align: left;
+}
+
+.sidebar-btn .btn-icon {
+  color: var(--neon-amber);
+  font-size: 14px;
+  transition: transform 0.15s ease;
+}
+
+.sidebar-btn:hover {
+  background-color: #2c2545;
+  border-color: var(--neon-cyan);
+  color: var(--neon-cyan);
+  transform: translate(-2px, -2px);
+  box-shadow: 5px 5px 0px var(--text-dark), 5px 5px 0px var(--neon-cyan);
+}
+
+.sidebar-btn:hover .btn-icon {
+  transform: translateX(3px);
+}
+
+/* Botón activo seleccionado */
+.sidebar-btn.active {
+  background-color: var(--neon-amber);
+  color: var(--text-dark);
+  border-color: #ffffff;
+  box-shadow: 4px 4px 0px var(--text-dark);
+}
+
+.sidebar-btn.active .btn-icon {
+  color: var(--text-dark);
+}
+
+/* Pie del sidebar con contador de cinta analógica */
+.sidebar-footer {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-top: 16px;
+  border-top: 2px dashed var(--border-muted);
+}
+
+.tape-counter-box {
+  background-color: #0b0914;
+  border: 2px solid var(--border-muted);
+  padding: 8px 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.tape-label {
+  font-family: var(--font-vhs);
+  font-size: 18px;
+  color: var(--neon-cyan);
+  letter-spacing: 1px;
+}
+
+.tape-digits {
+  font-family: var(--font-vhs);
+  font-size: 26px;
+  color: var(--neon-amber);
+  letter-spacing: 3px;
+  text-shadow: 0 0 6px rgba(255, 183, 3, 0.4);
+}
+
+.cassette-decor {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  color: var(--neon-magenta);
+  font-size: 14px;
+}
+
+.tape-bridge {
+  flex-grow: 1;
+  height: 2px;
+  background-color: var(--border-muted);
+}
+
+/* ==========================================================================
+   3. MAIN & CATÁLOGO - GRID DE CARTUCHOS ARCADE
+   ========================================================================== */
+
+.games-container {
+  grid-area: main;
+  padding: 30px;
+}
+
+.catalog-header-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 16px;
+  margin-bottom: 28px;
+  border-bottom: 2px dashed var(--border-muted);
+}
+
+.catalog-title-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.catalog-bullet {
+  color: var(--neon-magenta);
+  font-size: 14px;
+}
+
+.catalog-heading {
+  font-family: var(--font-arcade);
+  font-size: 16px;
+  color: var(--neon-cyan);
+  letter-spacing: 1px;
+  text-shadow: 2px 2px 0px #000;
+}
+
+.catalog-meta-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+}
+
+.status-label {
+  color: var(--text-muted);
+}
+
+.status-val {
+  color: var(--neon-green);
+  font-weight: bold;
+}
+
+.status-blinker {
+  width: 8px;
+  height: 8px;
+  background-color: var(--neon-green);
+  box-shadow: 0 0 6px var(--neon-green);
+  animation: blink 1.2s infinite;
+}
+
+/* Cuadrícula para los 6 videojuegos */
+.games-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 26px;
+}
+
+/* ==========================================================================
+   4. GAMECARD - TARJETA CARTUCHO / VHS RETRO
+   ========================================================================== */
+
+.game-card {
+  background-color: var(--bg-card);
+  border: 2px solid var(--border-muted);
+  box-shadow: var(--shadow-hard);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+/* Franja superior tricolor en cada juego */
+.card-top-accent {
+  height: 4px;
+  background: linear-gradient(90deg, var(--neon-magenta), var(--neon-amber), var(--neon-cyan));
+}
+
+.game-card:hover {
+  transform: translate(-3px, -3px);
+  border-color: var(--neon-cyan);
+  box-shadow: 6px 6px 0px var(--text-dark), 6px 6px 0px var(--neon-cyan);
+  background-color: var(--bg-card-hover);
+}
+
+/* Imagen del juego */
+.game-card-img-wrapper {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background-color: #0b0914;
+  overflow: hidden;
+  border-bottom: 2px solid var(--border-muted);
+}
+
+.game-card-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  filter: contrast(105%) saturate(110%);
+  transition: transform 0.3s ease;
+}
+
+.game-card:hover .game-card-img {
+  transform: scale(1.04);
+}
+
+/* Etiqueta estilo ROM / Cartucho */
+.card-cartridge-tag {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background-color: rgba(11, 9, 20, 0.88);
+  border: 1px solid var(--neon-amber);
+  color: var(--neon-amber);
+  font-family: var(--font-arcade);
+  font-size: 8px;
+  padding: 4px 6px;
+  letter-spacing: 0.5px;
+}
+
+/* Contenido de la tarjeta */
+.game-card-info {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.game-card-meta {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
+.dev-tag {
+  color: var(--neon-cyan);
+  font-size: 11px;
+  font-weight: bold;
+}
+
+.game-card-dev {
+  color: var(--text-muted);
+  font-size: 13px;
+  text-transform: uppercase;
+}
+
+.game-card-title {
+  font-family: var(--font-arcade);
+  font-size: 13px;
+  line-height: 1.4;
+  color: #ffffff;
+  min-height: 36px;
+}
+
+/* Botón Ver Detalles estilo botón arcade */
+.game-card-btn {
+  width: 100%;
+  padding: 11px;
+  background-color: #2c2543;
+  border: 2px solid var(--neon-cyan);
+  color: var(--neon-cyan);
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: bold;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 3px 3px 0px var(--text-dark);
+  transition: all 0.15s ease;
+}
+
+.game-card-btn .btn-play-icon {
+  font-size: 10px;
+  color: var(--neon-magenta);
+}
+
+.game-card-btn:hover {
+  background-color: var(--neon-cyan);
+  color: var(--text-dark);
+  transform: translate(-2px, -2px);
+  box-shadow: 4px 4px 0px var(--text-dark);
+}
+
+.game-card-btn:hover .btn-play-icon {
+  color: var(--text-dark);
+}
+
+.game-card-btn:active {
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0px var(--text-dark);
+}
+
+/* ==========================================================================
+   ANIMACIONES RETRO
+   ========================================================================== */
+
+@keyframes blink {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.2;
+  }
+}
+
+/* ==========================================================================
+   RESPONSIVE DESIGN (TABLETS Y MÓVILES)
+   ========================================================================== */
+
+@media (max-width: 860px) {
+  #root {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "header"
+      "sidebar"
+      "main";
+  }
+
+  .sidebar {
+    border-right: none;
+    border-bottom: 3px solid var(--border-muted);
+  }
+
+  .sidebar-menu {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .sidebar-menu li {
+    flex: 1;
+  }
+
+  .header {
+    flex-direction: column;
+    gap: 14px;
+    text-align: center;
+  }
+
+  .header-brand {
+    align-items: center;
+  }
+}
